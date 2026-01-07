@@ -12,6 +12,8 @@ test.describe('SauceDemo E2E Tests Authentication Test', () => {
         const loginPage = new LogInPage(page);
         await loginPage.login('standard_user', 'secret_sauce');     
         await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
+        
+        await expect(page).snapshot('valid-login.png');
     });
     
     test('Invalid Login Test - Wrong Password', async ({ page }) => {
