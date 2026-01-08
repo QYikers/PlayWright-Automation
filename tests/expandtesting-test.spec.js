@@ -8,8 +8,8 @@ test.describe('Expand Site testing',()=>{
     test.beforeAll(async({request})=>{
         const response = await request.post(`${baseAPIurl}/users/login`,{
             data:{
-                email:'testuser_1767533699274@example.com',
-                password:'TestPassword'
+                email:process.env.USER_EMAIL,
+                password:process.env.USER_PASSWORD
             }
         })
         const tokenData = await response.json();
@@ -21,11 +21,11 @@ test.describe('Expand Site testing',()=>{
     email: 'testuser_1767533699274@example.com',
     password: 'TestPassword'
      **/
-    /**  test('Login Using API', async ({request})=>{
+    test('Login Using API', async ({request})=>{
         const response = await request.post(`${baseAPIurl}/users/login`,{
             data:{
-                email:'testuser_1767533699274@example.com',
-                password:'TestPassword'
+                email:process.env.USER_EMAIL,
+                password:process.env.USER_PASSWORD
             }
         })
 
@@ -36,8 +36,6 @@ test.describe('Expand Site testing',()=>{
 
     test('Insert Notes using API', async({request})=>{
         
-        const tokenData = await responseLogin.json();
-        authToken = tokenData.data.token;
 
         const response = await request.post(`${baseAPIurl}/notes`,{
             headers:{
@@ -54,7 +52,7 @@ test.describe('Expand Site testing',()=>{
       await expect(checker.status).toBe(200);
         console.log(checker.data);
 
-    })**/
+    })
 
     test('Deleting of All of the Notes using API', async({request})=>{
         const idArray=[];
@@ -80,6 +78,54 @@ test.describe('Expand Site testing',()=>{
          }
        
 
-
     })
+
+})
+
+test.describe('Negative Testing in Expand Testing',()=>{
+
+     const baseAPIurl='https://practice.expandtesting.com/notes/api';
+    let authToken;
+
+    // Test for getting the auth token
+    test.beforeAll(async({request})=>{
+        const response = await request.post(`${baseAPIurl}/users/login`,{
+            data:{
+                email:process.env.USER_EMAIL,
+                password:process.env.USER_PASSWORD
+            }
+        })
+        const tokenData = await response.json();
+        authToken = tokenData.data.token;
+    })
+
+
+
+    test('Login Using API with Invalid Credentials', async({request})=>{
+        const response = await request.post(`${baseAPIurl}/users/login`,{
+            data:{
+                email:'InvalidEmail@example.com',
+                password:'InvalidPassword'
+            }
+        })
+        const checker = await response.json();
+        await expect(checker.status).toBe(401);
+    })
+
+
+    test('Adding notes Using API with Invalid/Expired Token',async({request})=>{
+        const response =await request.post(`${baseAPIurl}/notes`,{
+            headers:{
+                'x-auth-token':'InvalidToken'
+            },
+            data:{
+                title:'Test Note',
+                description:'This note is created using Playwright Automation',
+                category:'Personal'
+            }
+        })
+        const checker = await response.json();
+        await expect(checker.status).toBe(401);
+    })
+
 })
