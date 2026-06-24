@@ -3,6 +3,7 @@ export class CartPage {
         this.page = page;
         this.cartItems = page.locator('.cart_item');
         this.checkoutButton = page.locator('[data-test="checkout"]');
+        this.cartBadge = page.locator('.shopping_cart_badge');
     }
 
     async getCartItems() {
@@ -17,17 +18,22 @@ export class CartPage {
         await this.page.click(`[data-test="remove-${itemDataTest}"]`);
     }
 
-    async validateItemInCart(itemName) {
+    async isItemInCart(itemName) {
         const itemLocator = this.cartItems.filter({ hasText: itemName });
         return await itemLocator.isVisible();
     }
 
-    async validateItemQuantity(itemName, expectedQuantity) {
+    async getItemQuantity(itemName) {
         const itemLocator = this.cartItems.filter({ hasText: itemName });
         const quantityLocator = itemLocator.locator('.cart_quantity');
         const quantityText = await quantityLocator.textContent();
-        return parseInt(quantityText) === expectedQuantity;
+        return Number(quantityText?.trim() || 0);
     }
 
-    
+    async getCartBadgeCount() {
+        const count = await this.cartBadge.count();
+        if (count === 0) return 0;
+        const text = await this.cartBadge.textContent();
+        return Number(text?.trim() || 0);
+    }
 }

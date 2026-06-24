@@ -2,13 +2,18 @@
   "name": "playwrightprojects",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:update-snapshots": "playwright test --update-snapshots"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.57.0",
+    "@playwright/test": "^1.61.1",
     "@types/node": "^24.10.1"
   },
   "dependencies": {

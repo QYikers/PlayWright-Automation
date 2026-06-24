@@ -1,12 +1,12 @@
 // @ts-check
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 import { defineConfig, devices } from '@playwright/test';
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// import dotenv from 'dotenv';
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
@@ -37,28 +37,35 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name:'setup',
-      testMatch:/.*.setup\.js/
+      name: 'setup',
+      testDir: './playwright',
+      testMatch: ['**/global.setup.js']
     },
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'],
-      storageState: 'tests/playwright/.auth/user.json',
-       },
-      dependencies:['setup'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
     },
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'],
-      storageState: 'tests/playwright/.auth/user.json',
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: 'playwright/.auth/user.json',
       },
-      dependencies:['setup'],
+      dependencies: ['setup'],
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: {
+        ...devices['Desktop Safari'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
     },
 
     /* Test against mobile viewports. */

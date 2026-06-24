@@ -1,4 +1,4 @@
-export class CheckOutPages {
+export class CheckOutPage {
     constructor(page) {
         this.page = page;
         this.firstNameInput = page.locator('[data-test="firstName"]');
@@ -14,8 +14,11 @@ export class CheckOutPages {
         await this.postalCodeInput.fill(postalCode);
     }
 
-    async completeCheckout() {
+    async continueCheckout() {
         await this.continueButton.click();
+    }
+
+    async finishCheckout() {
         await this.finishButton.click();
     }
 }
